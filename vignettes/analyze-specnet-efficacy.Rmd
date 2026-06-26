@@ -1,0 +1,21 @@
+---
+title: "Analyze the Efficacy of SpeciesNet Observations on Your Dataset"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyze the Efficacy of SpeciesNet Observations on Your Dataset}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+THIS VIGNETTE NOT IMPLEMENTED
+
+```{r setup}
+library(camRa)
+```
