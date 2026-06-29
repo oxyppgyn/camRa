@@ -1,0 +1,18 @@
+# Block OpenAI's crawlers
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+# Block Anthropic's crawler
+User-agent: ClaudeBot
+Disallow: /
+
+# Block Google's AI training crawler
+User-agent: Google-Extended
+Disallow: /
+
+# Block Perplexity
+User-agent: PerplexityBot
+Disallow: /

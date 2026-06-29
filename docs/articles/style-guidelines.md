@@ -1,0 +1,101 @@
+# Style Guidelines/Conventions for this Package
+
+``` r
+library(camRa)
+```
+
+This page is largely for my own reference, but has been added as a
+vignette as it has some information that may be useful to users or
+contributers. When writing this package, I have some conventions that
+make sense to me, but may sometimes conflict with what others do;
+sometimes, these are just general good practices as well. Some things
+I’ve adapted since learning why I shouldn’t be doing them, like using
+`NA` as a default argument (bad!, should use `NULL`) and added them
+here.
+
+## Limiting Package Imports
+
+When writing code, as a general rule I want to avoid adding in any extra
+imports that I don’t absolutely need to reduce the possibility of
+incompatibility in the future and reduce what users must install to use
+this package. For that reason, some utility packages such as `dplyr`
+haven’t been used even though they very well could be. Unless something
+cannot be done within reason without a package (like reading in JSON
+data with `jsonlite`), it will not be considered.
+
+## Handling Files/Imports for the User
+
+When using this package for basic data exploration or just testing
+things out, users should not have to import any other packages. For this
+reason, when you use JSON or image data, either paths or the read file
+as an R object will be accepted. Along with this, every function that
+returns data formatted as a file type that can only reasonably be saved
+using another package includes a `file` argument to specify where it
+should be saved. To prevent users from accidently overwriting data,
+these functions also include an `overwrite` parameter.
+
+Some functions do not have a `file` argument, while similar ones do.
+Most MegaDetector functions return JSON formatted data and use `file`,
+but
+[`megadet_get_counts()`](https://oxyppgyn.github.io/camRa/reference/megadet_get_counts.md)
+returns a table that can be saved with base
+[`write.csv()`](https://rdrr.io/r/utils/write.table.html) or similar
+functins, so it doesn’t.
+
+## Function Naming
+
+Functions all use snake case (“first_second_third”) and are limited to
+three words (i.e., up to two underscores. With snake case, all functions
+use undercase with the exception of when acronyms (like “LILA” for the
+Living Library of Alexandria) are in the function. Limiting the number
+of words in a function name will make it less of a pain to use and if
+possible names should be made shorter like not using
+`megadet_filter_json()` and instead using
+[`megadet_filter()`](https://oxyppgyn.github.io/camRa/reference/megadet_filter.md).
+
+Functions typically use prefixes that align with their general use case,
+which is also generally what .R file they are defined in. For
+MegaDetector and SpeciesNet functions, the approach has been to use
+“megadet\_” for functions that can apply to files with information with
+both and “specnet\_” for any that only apply to files that have
+SpeciesNet data. Most image functions will be prefaced with “img\_”
+which was done to prevent conflicts with `magick` functions (they use
+“image\_”).
+
+## Globals/Settings
+
+This package has some global settings to prevent needing to rewrite the
+same argument over and over. As of writing, the only global setting is
+`camRa.validate_json` which determines if the `json` argument in
+functions should be validated as a properly formatted object (only
+applies if the input is not a path to the file). `jsonlite` does not
+give its outputs a unique class, so this is done by trying to convert it
+to real JSON. For large files covering hundreds of thousands of images,
+validation will slow things down immensely but it is important to handle
+strange errors that could happen if you give `json` something it doesn’t
+expect. Users will likely want to turn this off if they know what
+they’re doing, so the setting is editable using
+[`options()`](https://rdrr.io/r/base/options.html). This can also be
+done by function using the `validate_json` argument (default = `TRUE`).
+
+## On the Use of Quotes
+
+When writing in R, both single and double quotes (`'text'` and `"text"`)
+are acceptable. As a personal preference, I use single quotes for
+everything. The reasoning for this is just practicality, my keyboard has
+both on the same key and double quotes is the one that needs you to use
+the shift key (annoying!). I’ve found it also makes it easier to write
+error strings, since I often want to say X argument must be “x”, “y”, or
+“z”, and using double quotes as text is only possible usually with
+single quotes wrapping the text. To keep consistent, this is a rule for
+the entire package, including potential contributions from others. The
+only exception is in error strings as mentioned before and vignettes.
+Most people from my experience use double quotes, so vignettes will use
+them. It matters more than the code that most users will never actually
+neded to look at (or at least, I hope).
+
+## Default Function Values
+
+`NULL` should be the default when there isn’t a value that belongs
+there. In the past, I’ve used mainly `NA`, but for consistency am
+enforcing `NULL` as the proper value.

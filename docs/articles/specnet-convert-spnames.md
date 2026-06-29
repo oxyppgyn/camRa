@@ -1,0 +1,257 @@
+# Convert (Reclassify) SpeciesNet Taxonomic Category
+
+This vignette illustrates how a user can update the categories provided
+in a SpeciesNet JSON file to better suit their workflow/project. This
+example will show reclassifying names into fewer categories with the
+intent of making it easier to go by species. For this, we’ll use a
+subset of 500 images from the
+[ENA24-detection](https://lila.science/datasets/ena24detection). This
+dataset comes from eastern North America, so we’ll focus on cutting out
+any species that are not present in this area and combining
+classifications that can only really be one thing into a single
+category.
+
+For example, converting all detections tagged as the cervidae family and
+*Odocoileus* genus to white-tailed deer (*Odocoileus virginianus*). If
+you run the general SpeciesNet model and not a country/state specific
+one (like I have), you will probably want to reassign things that are
+taxonomically different to a species found in your area, like muntjac
+deer and other Eurasian cervids to white-tailed dear for North American
+images.The inverse could also be done if SpeciesNet is classifying
+things higher taxonomically than you want, such as tagging detections as
+*peromyscus* when you can’t tell anything more than the animal is some
+kind of rodent.
+
+``` r
+library(jsonlite, camRa)
+
+#Turn off validation
+options("camRa.validate_json" = FALSE)
+```
+
+First, we’ll load in the data we’re using. The subset file names are
+provided as vector, while SpeciesNet data is stored as a JSON file. The
+subset can be called at anytime after the package is loaded, but the
+JSON file needs to be called with
+[`system.file()`](https://rdrr.io/r/base/system.file.html).
+
+``` r
+#Copy the path to the JSON file
+json_file <- system.file(
+  "extdata", 
+  "ena24subset_SpecNet_recognition.json", 
+  package = "camRa"
+)
+```
+
+JSON files for both SpeciesNet and MegaDetector map categories using
+numbers instead of rewriting the longer species name in each detection.
+This map is stored as one of the top-level or root keys,
+“classification_categories”. We want to pull out a list of the species
+names to build our table defining what names get changed to what (our
+“map”), along with the descriptions used for these names incase you also
+want to change those.
+
+These values can be obtained using two different methods. You can load
+the JSON file and index with `$` or use
+[`megadet_get_info()`](https://oxyppgyn.github.io/camRa/reference/megadet_get_info.md)
+if you want to avoid reading in the json file to an object or avoid
+importing `jsonlite`, since it’ll do it for you. Regardless of method,
+since species names are the values in a named list, you must use
+[`unname()`](https://rdrr.io/r/base/unname.html) and
+[`unlist()`](https://rdrr.io/r/base/unlist.html) to extract them.
+
+Note:
+[`megadet_get_info()`](https://oxyppgyn.github.io/camRa/reference/megadet_get_info.md)
+will also accept `json_data` instead of the file path. Use this if you
+prefer having the function to index but will use the JSON data multiple
+times in your script to avoid reloading it everytime you use a `camRa`
+function.
+
+``` r
+#Read in JSON data
+json_data <- jsonlite::read_json(json_file)
+
+#Get values directly (method 1)
+species_names <- json_data$classification_categories |> 
+  unname() |> unlist()
+
+#Get values using index function (method 2)
+species_names <- camRa::megadet_get_info(
+  json_file, 
+  key = "classification_categories"
+) |> unname() |> unlist()
+```
+
+This process is repeated for the descriptions attached to each species,
+which are stored under a different key but use the same format.
+
+``` r
+#Get values directly (method 1)
+species_desc <- json_data$classification_category_descriptions |> 
+  unname() |> unlist()
+
+#Get values using index function (method 2)
+species_desc <- camRa::megadet_get_info(
+  json_file, 
+  key = "classification_category_descriptions"
+) |> unname() |> unlist()
+```
+
+Next, we want to build a table from this information and save it
+somewhere so it can be more easily edited. We’ll just use a CSV since
+that’s easy and works fine for small files. After this file is written,
+you can fill in the new_species and (optionally) the new_description
+columns with the values you want. Only the first description value
+associated with each species will be used, so ensure these are
+consistent. I.e., if you change both “cervidae” and white-tailed deer”
+to “Deer”, both of these rows should have the same description..
+
+Values mapped from the old to new species can be matched in a
+many-to-one relationship, so the multiple species can be remapped to a
+single one. The new values also do not have to exist in the old species
+column. Feel free to abbreviate names (like just “raccoon” instead of
+the default “northern raccoon”) or change them entirely (“canid family”
+to “probably just a coyote”).
+
+Be careful re-running the cell below, as it can overwrite your hard work
+filling out the CSV. I suggest renaming the file to prevent this before
+you start editing.
+
+``` r
+#Create table as list of vectors
+##No need to convert to a data frame here
+species_map <- list(
+  "old_species" = species_names,
+  "old_description" = species_desc,
+  "new_species" = rep("", length(species_names)),
+  "new_description" = rep("", length(species_desc))
+)
+
+#Write to CSV
+write.csv(species_map, "species_map.csv", row.names = FALSE)
+```
+
+After the CSV is filled in with new species values, we’ll read it back
+in and give the columns to the reclassification function. We only care
+about the new and old species columns, and optionally the new
+description column. If you’ll be repeating this with many JSON files and
+reusing this file, it may be good to add extra information in an
+additional column, such as why you reclassified things the way you did.
+
+Below, we’re reading in a stored CSV file from he package instead of
+reading in the same file we output (or, a renamed copy). Generally,
+you’ll want to change this to be a typical file path. You’ll see in this
+file, a new column called “reclass_rational” was added, which contains
+info on why certain things were changed.
+
+``` r
+#Copy the path to the CSV file
+csv_file <- system.file(
+  "extdata", 
+  "species_map_ena24subset.csv",
+  package = "camRa"
+)
+
+#Read in CSV
+species_map <- read.csv(csv_file)
+
+#Show table
+##Remove old description for view since its long text
+knitr::kable(head(species_map[, !names(species_map) %in% "old_description"]))
+```
+
+| old_species | new_species | new_description | reclass_rational |
+|:---|:---|:---|:---|
+| eastern chipmunk | Chipmunk | Small with stripes on back |  |
+| eastern gray squirrel | Gray Squirrel | Bushy tail with white hair |  |
+| mammal | Mammal |  |  |
+| sciuridae family | Squirrel (General) |  |  |
+| woodchuck | Woodchuck | Short legs, beaver-ish build |  |
+| marmota species | Woodchuck | Short legs, beaver-ish build | Woodchuck is only marmot in east U.S. |
+
+With our table, we just need to give the columns to
+[`camRa::specnet_reclassify()`](https://oxyppgyn.github.io/camRa/reference/specnet_reclassify.md)
+and tell it where to save the new file.
+
+The CSV used here has information in the new_description column, but if
+you do not want to update these, usually you should use `NULL` for this
+parameter or remove it from the function call, as you may get strange
+behavior when multiple `NA`s are passed. Alternatively, convert all
+`NA`s to empty character strings.
+
+``` r
+#Reclassify JSON
+new_json_data <- camRa::specnet_reclassify(
+  json = json_data, 
+  values_from = species_map$old_species,
+  values_to = species_map$new_species,
+  values_description = species_map$new_description,
+  file = "reclass_ena24subset_MegaDet_recognition.json"
+)
+```
+
+Now you have an updated file, but how can you tell if it’s correct? With
+the way SpeciesNet data is written, the JSON file just has numbers in
+the detections and you have to go check the classification_categories
+key for updated values then go searching through the image data to see
+what the numbers match up as… Instead, let’s flatten the JSON files and
+compare the two columns using
+[`megadet_flatten()`](https://oxyppgyn.github.io/camRa/reference/megadet_flatten.md).
+By default, this function will map species names onto the image data to
+avoid just looking at numbers, but I’ve included `map_names = TRUE`
+anyways.
+
+We don’t care about the other fields this gives us, so we’ll just grab
+the “classification_category” field from the tables the function
+produces instead of saving the entire table to an object and print them
+out together.
+
+After running this, you can see that the two json files now have
+different values that match what was defined in our map file.
+
+``` r
+#Get JSON info as tables, then grab column
+species_old <- camRa::megadet_flatten(
+  json = json_data,
+  map_names = TRUE
+)$classification_category
+
+species_new <- camRa::megadet_flatten(
+  json = new_json_data,
+  map_names = TRUE
+)$classification_category
+
+#Print random 20 value pairs
+##Use random because sequential are probably mostly the same sp.
+set.seed(98632)
+rand_index <- sample(1:500, size = 20)
+
+for (i in rand_index) {
+  cat(
+    "Old Taxon: ", species_old[[i]], 
+    ", New Taxon: ", species_new[[i]], 
+    "\n",  sep = ""
+  )
+}
+#> Old Taxon: grey fox, New Taxon: Grey Fox
+#> Old Taxon: woodchuck, New Taxon: Woodchuck
+#> Old Taxon: virginia opossum, New Taxon: Opossum
+#> Old Taxon: gallus species, New Taxon: Bird
+#> Old Taxon: wild turkey, New Taxon: Turkey
+#> Old Taxon: coyote, New Taxon: Coyote
+#> Old Taxon: domestic dog, New Taxon: Dog
+#> Old Taxon: red junglefowl, New Taxon: Bird
+#> Old Taxon: coyote, New Taxon: Coyote
+#> Old Taxon: domestic dog, New Taxon: Dog
+#> Old Taxon: gallus species, New Taxon: Bird
+#> Old Taxon: white-tailed deer, New Taxon: Deer
+#> Old Taxon: gallus species, New Taxon: Bird
+#> Old Taxon: wild turkey, New Taxon: Turkey
+#> Old Taxon: red junglefowl, New Taxon: Bird
+#> Old Taxon: grey fox, New Taxon: Grey Fox
+#> Old Taxon: wild turkey, New Taxon: Turkey
+#> Old Taxon: virginia opossum, New Taxon: Opossum
+#> Old Taxon: striped skunk, New Taxon: Skunk
+#> Old Taxon: red fox, New Taxon: Red Fox
+```

@@ -39,9 +39,6 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# pkgdown site
-docs/
-
 # translation temp files
 po/*~
 
@@ -50,7 +47,6 @@ rsconnect/
 
 # testing script file
 /testing.R
-docs
 /doc/
 /Meta/
 inst/doc
