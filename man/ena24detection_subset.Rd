@@ -5,7 +5,7 @@
 \alias{ena24detection_subset}
 \title{Random Subset of ena24detection files}
 \format{
-An object of class \code{character} of length 500.
+An object of class \code{data.frame} with 500 rows and 4 columns.
 }
 \usage{
 ena24detection_subset

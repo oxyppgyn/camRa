@@ -19,8 +19,6 @@ knitr::opts_chunk$set(
 
 *camRa* is an R package aimed at providing utilities for managing and manipulating camera trap-related data. *CamRa* includes utilities to help with obtaining data from the [Living Library of Alexandria (LILA)](https://lila.science), summarizing and updating MegaDetector/SpeciesNet detection files, and other general utilities for camera trap image data.
 
-See the reference manual [here](camRa_documentation.pdf) for information on what's available in the package.
-
 ## Current Functionality
 
 -   Getting info on LILA datasets and downloading images from LILA.

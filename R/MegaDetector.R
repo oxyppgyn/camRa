@@ -20,7 +20,7 @@ NULL
 #'
 #' @return a nested list object with filtered JSON data.
 #' @export
-megadet_filter_json <- function(dir, json, file = NA, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+megadet_filter <- function(dir, json, file = NULL, validate_json = getOption('camRa.validate_json', default = TRUE)) {
   #Get Files to Filter For
   img_files <- list.files(dir, full.names = FALSE, recursive = TRUE)
 
@@ -37,7 +37,7 @@ megadet_filter_json <- function(dir, json, file = NA, validate_json = getOption(
   json_data$images <- json_data$images[rem_i]
 
   #Save File
-  if (!is.na(file)) {
+  if (!is.null(file)) {
     jsonlite::write_json(json_data, file, pretty = TRUE)
   }
 
@@ -48,7 +48,7 @@ megadet_filter_json <- function(dir, json, file = NA, validate_json = getOption(
 #'
 #' Flattens MegaDetector/SpeciesNet JSON files to a table format. Data is split by detection, with
 #' images potentially having more than one row of data if more than one detection was found. Images
-#' with no detections are not included here.
+#' with no detections will have only one record here, with no detection (bbox) information.
 #'
 #' @param json character vector or nested list object from [jsonlite::read_json()].
 #' The JSON file or loaded JSON data to filter on.
@@ -61,7 +61,10 @@ megadet_filter_json <- function(dir, json, file = NA, validate_json = getOption(
 #'
 #' @return a dataframe with all data from the `images` tag of the JSON file.
 #' @export
-megadet_flatten_json <- function(json, map_names = TRUE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+megadet_flatten <- function(json, map_names = TRUE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+
+  #Check Inputs
+  if (!is.logical(map_names)) {stop('`map_names` must be numeric.')}
 
   #Import JSON File/Validate JSON Object
   json_data <- json_valimport(json, validate_json)
@@ -92,8 +95,18 @@ megadet_flatten_json <- function(json, map_names = TRUE, validate_json = getOpti
       next
     }
 
-    ##Skip When No Detections
-    if (length(img_data$detections) == 0) {next}
+    ##When No Detections
+    if (length(img_data$detections) == 0) {
+      x <- list(
+        'index' = i, 'file' = img_data$detections[[i]][['file']],
+        'detection_category' = NA, 'detection_conf' = NA, 'classification_category' = NA,
+        'classification_conf' = NA, 'bbox_x' = NA, 'bbox_y' = NA, 'bbox_width' = NA,
+        'bbox_height' = NA, 'failure' = FALSE
+      )
+
+    md_sn_data <- append(md_sn_data, list(x))
+    next
+    }
 
     ##For Files Without SpeciesNet
     if (!('classification_categories' %in% names(json_data)) || length(json_data$classification_categories)  == 0) {
@@ -205,7 +218,7 @@ megadet_flatten_json <- function(json, map_names = TRUE, validate_json = getOpti
 #'
 #' @return dependent on keys used.
 #' @export
-megadet_get_info <- function(json, key = 'info', file = NA, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+megadet_get_info <- function(json, key = 'info', file = NULL, validate_json = getOption('camRa.validate_json', default = TRUE)) {
   #Import JSON File/Validate JSON Object
   json_data <- json_valimport(json, validate_json)
 
@@ -214,7 +227,7 @@ megadet_get_info <- function(json, key = 'info', file = NA, validate_json = getO
   }
 
   #Save File
-  if (!is.na(file)) {
+  if (!is.null(file)) {
     jsonlite::write_json(json_data, file, pretty = TRUE)
   }
 
@@ -325,7 +338,7 @@ megadet_get_counts <- function(json, type = 'detection', map_names = TRUE, valid
 #'
 #' @return a nested list object representing JSON data.
 #' @export
-specnet_reclassify <- function(json, values_from, values_to, values_description = NA, file = NA, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+specnet_reclassify <- function(json, values_from, values_to, values_description = NULL, file = NULL, validate_json = getOption('camRa.validate_json', default = TRUE)) {
   #Check if From Values Are Unique + Same Length
   if (length(values_from) != length(unique(values_from))) {
     stop('Values from are not unique.')
@@ -357,8 +370,8 @@ specnet_reclassify <- function(json, values_from, values_to, values_description 
     #}
 
   } else {
-    if (!is.na(values_description)) {
-      stop('Value descriptions must be a character vector or `NA`.')
+    if (!is.null(values_description)) {
+      stop('Value descriptions must be a character vector or `NULL`.')
     }
   }
 
@@ -408,10 +421,9 @@ specnet_reclassify <- function(json, values_from, values_to, values_description 
   }
 
   #Save File
-  if (!is.na(file)) {
+  if (!is.null(file)) {
     jsonlite::write_json(json_data, file, pretty = TRUE)
   }
 
   return(json_data)
-
 }

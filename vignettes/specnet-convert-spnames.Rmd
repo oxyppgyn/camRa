@@ -51,8 +51,10 @@ species_names <- json_data$classification_categories |>
   unname() |> unlist()
 
 #Get values using index function (method 2)
-species_names <- camRa::megadet_get_info(json_file, key = "classification_categories") |>
-  unname() |> unlist()
+species_names <- camRa::megadet_get_info(
+  json_file, 
+  key = "classification_categories"
+) |> unname() |> unlist()
 ```
 
 This process is repeated for the descriptions attached to each species, which are stored under a different key but use the same format.
@@ -63,8 +65,10 @@ species_desc <- json_data$classification_category_descriptions |>
   unname() |> unlist()
 
 #Get values using index function (method 2)
-species_desc <- camRa::megadet_get_info(json_file, key = "classification_category_descriptions") |>
-  unname() |> unlist()
+species_desc <- camRa::megadet_get_info(
+  json_file, 
+  key = "classification_category_descriptions"
+) |> unname() |> unlist()
 ```
 
 Next, we want to build a table from this information and save it somewhere so it can be more easily edited. We'll just use a CSV since that's easy and works fine for small files. After this file is written, you can fill in the new_species and (optionally) the new_description columns with the values you want. Only the first description value associated with each species will be used, so ensure these are consistent. I.e., if you change both "cervidae" and white-tailed deer" to "Deer", both of these rows should have the same description..
@@ -95,7 +99,7 @@ Below, we're reading in a stored CSV file from he package instead of reading in 
 #Copy the path to the CSV file
 csv_file <- system.file(
   "extdata", 
-  "species_map_ena24subset.csv", #CHANGE THIS
+  "species_map_ena24subset.csv",
   package = "camRa"
 )
 
@@ -103,14 +107,14 @@ csv_file <- system.file(
 species_map <- read.csv(csv_file)
 
 #Show table
-##Remove old description since its long text and unneeded now
+##Remove old description for view since its long text
 knitr::kable(head(species_map[, !names(species_map) %in% "old_description"]))
 
 ```
 
 With our table, we just need to give the columns to `camRa::specnet_reclassify()` and tell it where to save the new file.
 
-The CSV used here has information in the new_description column, but if you do not want to update these, usually you should use `NA` for this parameter or remove it from the function call, as you may get strange behavior when multiple `NULL`s or `NA`s are passed.
+The CSV used here has information in the new_description column, but if you do not want to update these, usually you should use `NULL` for this parameter or remove it from the function call, as you may get strange behavior when multiple `NA`s are passed. Alternatively, convert all `NA`s to empty character strings.
 
 ```{r}
 #Reclassify JSON
@@ -123,20 +127,20 @@ new_json_data <- camRa::specnet_reclassify(
 )
 ```
 
-Now you have an updated file, but how can you tell if it's correct? With the way SpeciesNet data is written, the JSON file just has numbers in the detections that you have to go check the classification_categories key for... Instead, let's flatten the JSON files and compare the two columns using `megadet_json_flatten()`.
+Now you have an updated file, but how can you tell if it's correct? With the way SpeciesNet data is written, the JSON file just has numbers in the detections and you have to go check the classification_categories key for updated values then go searching through the image data to see what the numbers match up as... Instead, let's flatten the JSON files and compare the two columns using `megadet_flatten()`. By default, this function will map species names onto the image data to avoid just looking at numbers, but I've included `map_names = TRUE` anyways.
 
-We don't care about the other fields this gives us, so we'll just grab the "classification_category" field from the tables the function produces and print them out together.
+We don't care about the other fields this gives us, so we'll just grab the "classification_category" field from the tables the function produces instead of saving the entire table to an object and print them out together.
 
 After running this, you can see that the two json files now have different values that match what was defined in our map file.
 
 ```{r}
 #Get JSON info as tables, then grab column
-species_old <- camRa::megadet_flatten_json(
+species_old <- camRa::megadet_flatten(
   json = json_data,
   map_names = TRUE
 )$classification_category
 
-species_new <- camRa::megadet_flatten_json(
+species_new <- camRa::megadet_flatten(
   json = new_json_data,
   map_names = TRUE
 )$classification_category

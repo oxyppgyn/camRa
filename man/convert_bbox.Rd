@@ -4,7 +4,15 @@
 \alias{convert_bbox}
 \title{Convert between BBox Formats}
 \usage{
-convert_bbox(bbox, from, to, image, value_type = "absolute")
+convert_bbox(
+  bbox,
+  from,
+  to,
+  image = NULL,
+  img_width = NULL,
+  img_height = NULL,
+  value_type = "absolute"
+)
 }
 \arguments{
 \item{bbox}{character vector. Bounding box values.}
@@ -16,8 +24,14 @@ convert_bbox(bbox, from, to, image, value_type = "absolute")
 }}
 
 \item{image}{character or magick-image. The image to extract width and height from.
-Only needed if converting between value types (\code{value_type} is opposite of the provided
-bounding box). Value type of the input bounding box is inferred.}
+Only used if converting between value types (\code{value_type} is opposite of the provided
+bounding box). Value type of the input bounding box is inferred. Mutually exclusive
+with \code{img_width} and \code{img_height}.}
+
+\item{img_width, img_height}{numeric. The width and height of the image this bounding box
+belongs to. Only used if converting between value types (\code{value_type} is opposite of the
+provided bounding box). Value type of the input bounding box is inferred. Mutually exclusive
+mutually exclusive with \code{image}.}
 
 \item{value_type}{character. Type of values to use for the converted bounding box measures.
 Either "absolute" for pixel values or "relative" for scaled values.}

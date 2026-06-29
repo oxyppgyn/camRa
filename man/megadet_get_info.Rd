@@ -7,7 +7,7 @@
 megadet_get_info(
   json,
   key = "info",
-  file = NA,
+  file = NULL,
   validate_json = getOption("camRa.validate_json", default = TRUE)
 )
 }

@@ -16,7 +16,6 @@
 # PATH = paste(Sys.getenv("PATH"), "~/MiKTeX/miktex/bin/x64", # replace w/ your path to MiKTex
 # sep = .Platform$path.sep)
 #)
-
 # ---------- Try Install/Load Package to R Env. ----------
 devtools::install()
 library(camRa)
@@ -79,11 +78,7 @@ Disallow: /
 
 # Block Perplexity
 User-agent: PerplexityBot
-Disallow: /
-
-# Generic block for all other bots (Note: will also block standard search crawlers if not careful)
-# User-agent: *
-# Disallow: /")
+Disallow: /")
 
 #Make ai.txt
 writeLines(con = 'docs/ai.txt', text = "User-Agent: *

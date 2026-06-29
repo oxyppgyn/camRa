@@ -2,3 +2,30 @@ url: https://oxyppgyn.github.io/camRa/
 template:
   bootstrap: 5
 
+reference:
+  - title: "MegaDetector/SpeciesNet JSON Data"
+    desc: "Functions for utilizing JSON files containing MegaDetector and SpeciesNet detections and classifications."
+    contents:
+      - starts_with("megadet_")
+      - starts_with("specnet_")
+
+  - title: "Image Manipulation"
+    desc: "Functions for manipulating and extracting information from images."
+    contents:
+      - starts_with("img_")
+      - convert_bbox
+
+  - title: "LILA"
+    desc: "Functions for interacting with the Living Library of Alexandria (LILA)."
+    contents:
+      - starts_with("LILA_")
+
+  - title: "Timelapse"
+    desc: "Functions for interacting with Timelapse .ddb and .tdb files."
+    contents:
+      - starts_with("tl_")
+
+  - title: "Datasets"
+    desc: "Datasets included in this package."
+    contents:
+      - ena24detection_subset

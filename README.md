@@ -14,9 +14,6 @@ help with obtaining data from the [Living Library of Alexandria
 MegaDetector/SpeciesNet detection files, and other general utilities for
 camera trap image data.
 
-See the reference manual [here](camRa_documentation.pdf) for information
-on what’s available in the package.
-
 ## Current Functionality
 
 - Getting info on LILA datasets and downloading images from LILA.

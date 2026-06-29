@@ -13,9 +13,7 @@ RoxygenNote: 8.0.0
 Imports: jsonlite,aws.s3, DBI, RSQLite, magick, tesseract
 Depends: R (>= 3.5)
 LazyData: true
-Suggests: 
-    knitr,
-    rmarkdown
+Suggests: knitr, rmarkdown, dplyr, stringr, ggplot2
 VignetteBuilder: knitr
 Collate: 
     'common.R'

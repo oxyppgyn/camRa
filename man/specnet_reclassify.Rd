@@ -8,8 +8,8 @@ specnet_reclassify(
   json,
   values_from,
   values_to,
-  values_description = NA,
-  file = NA,
+  values_description = NULL,
+  file = NULL,
   validate_json = getOption("camRa.validate_json", default = TRUE)
 )
 }
