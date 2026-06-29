@@ -9,7 +9,6 @@ keys.
 megadet_get_info(
   json,
   key = "info",
-  file = NULL,
   validate_json = getOption("camRa.validate_json", default = TRUE)
 )
 ```
@@ -25,18 +24,10 @@ megadet_get_info(
 - key:
 
   character, character vector, list, or `NULL`. Key(s) and/or indices to
-  filter on in the JSON data. For first level keys, provide a character
-  of the key name. For higher levels, provide a vector of keys in the
-  order they are nested, such as `c("info", "megadetector_version")` to
-  get the MegaDetector version. A list with keys and indices can also be
-  used, such as `list("images", 1)` for detection information on the
-  first image in the file. If `NULL` is passed as a key, the entire JSON
-  file will be returned.
-
-- file:
-
-  character. File to write JSON data to. Use `NA` to skip writing to a
-  file.
+  filter on in the JSON data. For root keys, provide a character of the
+  key name. For higher levels, provide a vector or list of keys in the
+  order they are nested. If `NULL` is passed as a key, the entire JSON
+  will be returned.
 
 - validate_json:
 

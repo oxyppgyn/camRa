@@ -4,7 +4,13 @@
 \alias{img_luminosity}
 \title{Calculate Luminosity/Brightness of an Image}
 \usage{
-img_luminosity(image, method = "grayscale", file = NULL, bbox = NULL)
+img_luminosity(
+  image,
+  method = "grayscale",
+  file = NULL,
+  overwrite = FALSE,
+  bbox = NULL
+)
 }
 \arguments{
 \item{image}{character or magick-image. Image to extract information from.}
@@ -24,6 +30,6 @@ Use \code{\link[=convert_bbox]{convert_bbox()}} to convert from other formats.}
 a magick image.
 }
 \description{
-Extracts luminance information from a specified colorspace and returns the
+Extracts luminance information from a specified colorspace and returns
 the appropriate channel.
 }

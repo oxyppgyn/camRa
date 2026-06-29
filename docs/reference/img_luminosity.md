@@ -1,12 +1,18 @@
 # Calculate Luminosity/Brightness of an Image
 
 Extracts luminance information from a specified colorspace and returns
-the the appropriate channel.
+the appropriate channel.
 
 ## Usage
 
 ``` r
-img_luminosity(image, method = "grayscale", file = NULL, bbox = NULL)
+img_luminosity(
+  image,
+  method = "grayscale",
+  file = NULL,
+  overwrite = FALSE,
+  bbox = NULL
+)
 ```
 
 ## Arguments

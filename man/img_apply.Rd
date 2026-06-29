@@ -4,10 +4,12 @@
 \alias{img_apply}
 \title{Apply a Summary function to an Image}
 \usage{
-img_apply(image, fun, bbox = NULL, ...)
+img_apply(image, fun, file = NULL, overwrite = FALSE, bbox = NULL, ...)
 }
 \arguments{
 \item{image}{character or magick-image. Image to extract information from.}
+
+\item{fun}{function reference. The function to be applied.}
 
 \item{bbox}{numeric vector. Bounding box values. Formatted as xmin, ymin, xmax, ymax.
 Use \code{\link[=convert_bbox]{convert_bbox()}} to convert from other formats.}
@@ -19,6 +21,5 @@ varies based on function applied.
 }
 \description{
 Applies a function to the extracted numeric matrix of values behind an image
-and returns the result. Functions are applied using \code{apply()} across channels.
-#'
+and returns the result. Functions are applied using \code{apply()} across all channels.
 }

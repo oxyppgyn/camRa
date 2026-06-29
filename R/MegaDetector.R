@@ -15,12 +15,13 @@ NULL
 #' @param json character vector or nested list object from [jsonlite::read_json()].
 #' The JSON file or loaded JSON data to filter on.
 #' @param file character. File to write JSON data to. Use `NA` to skip writing to a file.
+#' @param overwrite. logical. If overwriting files is allowed.
 #' @param validate_json boolean. If JSON data formatted as nested lists should be validated.
 #' This can prevent unexpected errors if the parameter is a list, but not JSON but may increase runtime.
 #'
 #' @return a nested list object with filtered JSON data.
 #' @export
-megadet_filter <- function(dir, json, file = NULL, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+megadet_filter <- function(dir, json, file = NULL, overwrite = FALSE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
   #Get Files to Filter For
   img_files <- list.files(dir, full.names = FALSE, recursive = TRUE)
 
@@ -38,6 +39,9 @@ megadet_filter <- function(dir, json, file = NULL, validate_json = getOption('ca
 
   #Save File
   if (!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
     jsonlite::write_json(json_data, file, pretty = TRUE)
   }
 
@@ -187,12 +191,8 @@ megadet_flatten <- function(json, map_names = TRUE, validate_json = getOption('c
 #' @param json character vector or nested list object from [jsonlite::read_json()].
 #' The JSON file or loaded JSON data to filter on.
 #' @param key character, character vector, list, or `NULL`. Key(s) and/or indices to filter on in the JSON data.
-#' For first level keys, provide a character of the key name. For higher levels, provide a vector
-#' of keys in the order they are nested, such as `c("info", "megadetector_version")` to get the
-#' MegaDetector version. A list with keys and indices can also be used, such as `list("images", 1)`
-#' for detection information on the first image in the file. If `NULL` is passed as a key, the entire JSON
-#' file will be returned.
-#' @param file character. File to write JSON data to. Use `NA` to skip writing to a file.
+#' For root keys, provide a character of the key name. For higher levels, provide a vector or list
+#' of keys in the order they are nested. If `NULL` is passed as a key, the entire JSON will be returned.
 #' @param validate_json boolean. If JSON data formatted as nested lists should be validated.
 #' This can prevent unexpected errors if the parameter is a list, but not JSON but may increase runtime.
 #' @examples
@@ -218,17 +218,12 @@ megadet_flatten <- function(json, map_names = TRUE, validate_json = getOption('c
 #'
 #' @return dependent on keys used.
 #' @export
-megadet_get_info <- function(json, key = 'info', file = NULL, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+megadet_get_info <- function(json, key = 'info', validate_json = getOption('camRa.validate_json', default = TRUE)) {
   #Import JSON File/Validate JSON Object
   json_data <- json_valimport(json, validate_json)
 
   for (i in key) {
     json_data <- json_data[[i]]
-  }
-
-  #Save File
-  if (!is.null(file)) {
-    jsonlite::write_json(json_data, file, pretty = TRUE)
   }
 
   return(json_data)
@@ -320,6 +315,7 @@ megadet_get_counts <- function(json, type = 'detection', map_names = TRUE, valid
 #' classification descriptions as. This must have unique values to map onto `values_from`. Use `NA`
 #' to skip updating descriptions and instead remove them from the file.
 #' @param file character. File to write JSON data to. Use `NA` to skip writing to a file.
+#' @param overwrite logical. If overwriting files is allowed.
 #' @param validate_json boolean. If JSON data formatted as nested lists should be validated.
 #' This can prevent unexpected errors if the parameter is a list, but not JSON but may increase runtime.
 #'
@@ -338,7 +334,7 @@ megadet_get_counts <- function(json, type = 'detection', map_names = TRUE, valid
 #'
 #' @return a nested list object representing JSON data.
 #' @export
-specnet_reclassify <- function(json, values_from, values_to, values_description = NULL, file = NULL, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+specnet_reclassify <- function(json, values_from, values_to, values_description = NULL, file = NULL, overwrite = FALSE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
   #Check if From Values Are Unique + Same Length
   if (length(values_from) != length(unique(values_from))) {
     stop('Values from are not unique.')
@@ -364,10 +360,6 @@ specnet_reclassify <- function(json, values_from, values_to, values_description 
     if (length(values_description) != length(values_from)) {
       stop('Values from is not the same length as value descriptions.')
     }
-
-    #if (length(unique(values_description)) != length(unique(values_from))) {
-    #  stop('Values from and value descriptions do not have the same number of unique elements. These two arrays must be one-to-one.')
-    #}
 
   } else {
     if (!is.null(values_description)) {
@@ -422,6 +414,9 @@ specnet_reclassify <- function(json, values_from, values_to, values_description 
 
   #Save File
   if (!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
     jsonlite::write_json(json_data, file, pretty = TRUE)
   }
 

@@ -16,6 +16,7 @@ specnet_reclassify(
   values_to,
   values_description = NULL,
   file = NULL,
+  overwrite = FALSE,
   validate_json = getOption("camRa.validate_json", default = TRUE)
 )
 ```
@@ -51,6 +52,10 @@ specnet_reclassify(
 
   character. File to write JSON data to. Use `NA` to skip writing to a
   file.
+
+- overwrite:
+
+  logical. If overwriting files is allowed.
 
 - validate_json:
 

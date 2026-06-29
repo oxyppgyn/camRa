@@ -26,21 +26,21 @@ tl_ddb_extract <- function(file) {
   return(data_table)
 }
 
-#' Insert New Values for a Timelapse DDB Column
+#' Insert New Values for a Timelapse Database Column
 #'
 #' Inserts a vector of values into a column in the data table of a Timelapse DDB
 #' file, overwriting existing data. Best used to insert data that cannot be
 #' obtained within Timelapse form metadata, such as OCR extracted temperature values.
 #'
 #' @param file character. File path to a timelapse database file (.ddb).
-#' @param col character. Name of the column you want to update in the DDB file.
+#' @param col character. Name of the column you want to update in the database file.
 #' @param values vector. A vector of values to insert into the database table.
 #' The class of this vector must align with the class of the database column.
 #' @param ids numeric vector. A vector of values with the IDs used in the table.
-#' [camRa::tl_ddb_extract] can be used to extract this information and join with
+#' [camRa::tl_ddb_extract()] can be used to extract this information and join with
 #' your datasets.
 #'
-#' @return NULL.
+#' @return `NULL`
 #' @export
 tl_ddb_insert <- function(file, col, values, ids) {
   #Check if Values and IDs are Same Length

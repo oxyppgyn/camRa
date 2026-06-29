@@ -13,11 +13,11 @@ LILA_list_datasets(quiet = FALSE, only_nonzip = TRUE)
 
 - quiet:
 
-  boolean. If warnings should be shown.
+  logical. If warnings should be shown.
 
 - only_nonzip:
 
-  boolean. If the returned datasets should be only ones available
+  logical. If the returned datasets should be only ones available
   file-by-file (not exclusively as compressed files).
 
 ## Value

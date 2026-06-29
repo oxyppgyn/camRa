@@ -8,6 +8,7 @@ megadet_filter(
   dir,
   json,
   file = NULL,
+  overwrite = FALSE,
   validate_json = getOption("camRa.validate_json", default = TRUE)
 )
 }
@@ -23,6 +24,8 @@ The JSON file or loaded JSON data to filter on.}
 
 \item{validate_json}{boolean. If JSON data formatted as nested lists should be validated.
 This can prevent unexpected errors if the parameter is a list, but not JSON but may increase runtime.}
+
+\item{overwrite.}{logical. If overwriting files is allowed.}
 }
 \value{
 a nested list object with filtered JSON data.

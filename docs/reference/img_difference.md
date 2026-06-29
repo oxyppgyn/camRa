@@ -5,7 +5,14 @@ Calculates the absolute pixel difference between two images.
 ## Usage
 
 ``` r
-img_diff(image1, image2, file = NULL, bbox = NULL, threshold = NULL)
+img_difference(
+  image1,
+  image2,
+  threshold = NULL,
+  file = NULL,
+  overwrite = FALSE,
+  bbox = NULL
+)
 ```
 
 ## Arguments
@@ -13,6 +20,11 @@ img_diff(image1, image2, file = NULL, bbox = NULL, threshold = NULL)
 - image1, image2:
 
   character or magick-image. Images to be compared.
+
+- threshold:
+
+  numeric. The image threshold that should be applied between 0 and 1.
+  All values below the threshold will be converted to 0.
 
 - file:
 
@@ -24,11 +36,6 @@ img_diff(image1, image2, file = NULL, bbox = NULL, threshold = NULL)
   ymax. Use
   [`convert_bbox()`](https://oxyppgyn.github.io/camRa/reference/convert_bbox.md)
   to convert from other formats.
-
-- threshold:
-
-  numeric. The image threshold that should be applied between 0 and 1.
-  All values below the threshold will be converted to 0.
 
 ## Value
 

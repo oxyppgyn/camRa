@@ -23,7 +23,7 @@ Functions for manipulating and extracting information from images.
 
 - [`img_apply()`](https://oxyppgyn.github.io/camRa/reference/img_apply.md)
   : Apply a Summary function to an Image
-- [`img_diff()`](https://oxyppgyn.github.io/camRa/reference/img_diff.md)
+- [`img_difference()`](https://oxyppgyn.github.io/camRa/reference/img_difference.md)
   : Calculate Differences Between Two Images
 - [`img_extract_text()`](https://oxyppgyn.github.io/camRa/reference/img_extract_text.md)
   : Extract Text from Image Using OCR
@@ -50,7 +50,7 @@ Functions for interacting with Timelapse .ddb and .tdb files.
 - [`tl_ddb_extract()`](https://oxyppgyn.github.io/camRa/reference/tl_ddb_extract.md)
   : Get Data Table from Timelapse Database
 - [`tl_ddb_insert()`](https://oxyppgyn.github.io/camRa/reference/tl_ddb_insert.md)
-  : Insert New Values for a Timelapse DDB Column
+  : Insert New Values for a Timelapse Database Column
 
 ## Datasets
 

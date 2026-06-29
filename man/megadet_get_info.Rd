@@ -7,7 +7,6 @@
 megadet_get_info(
   json,
   key = "info",
-  file = NULL,
   validate_json = getOption("camRa.validate_json", default = TRUE)
 )
 }
@@ -16,13 +15,8 @@ megadet_get_info(
 The JSON file or loaded JSON data to filter on.}
 
 \item{key}{character, character vector, list, or \code{NULL}. Key(s) and/or indices to filter on in the JSON data.
-For first level keys, provide a character of the key name. For higher levels, provide a vector
-of keys in the order they are nested, such as \code{c("info", "megadetector_version")} to get the
-MegaDetector version. A list with keys and indices can also be used, such as \code{list("images", 1)}
-for detection information on the first image in the file. If \code{NULL} is passed as a key, the entire JSON
-file will be returned.}
-
-\item{file}{character. File to write JSON data to. Use \code{NA} to skip writing to a file.}
+For root keys, provide a character of the key name. For higher levels, provide a vector or list
+of keys in the order they are nested. If \code{NULL} is passed as a key, the entire JSON will be returned.}
 
 \item{validate_json}{boolean. If JSON data formatted as nested lists should be validated.
 This can prevent unexpected errors if the parameter is a list, but not JSON but may increase runtime.}

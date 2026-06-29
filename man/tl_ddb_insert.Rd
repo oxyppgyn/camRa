@@ -2,24 +2,24 @@
 % Please edit documentation in R/Timelapse.R
 \name{tl_ddb_insert}
 \alias{tl_ddb_insert}
-\title{Insert New Values for a Timelapse DDB Column}
+\title{Insert New Values for a Timelapse Database Column}
 \usage{
 tl_ddb_insert(file, col, values, ids)
 }
 \arguments{
 \item{file}{character. File path to a timelapse database file (.ddb).}
 
-\item{col}{character. Name of the column you want to update in the DDB file.}
+\item{col}{character. Name of the column you want to update in the database file.}
 
 \item{values}{vector. A vector of values to insert into the database table.
 The class of this vector must align with the class of the database column.}
 
 \item{ids}{numeric vector. A vector of values with the IDs used in the table.
-\link{tl_ddb_extract} can be used to extract this information and join with
+\code{\link[=tl_ddb_extract]{tl_ddb_extract()}} can be used to extract this information and join with
 your datasets.}
 }
 \value{
-NULL.
+\code{NULL}
 }
 \description{
 Inserts a vector of values into a column in the data table of a Timelapse DDB

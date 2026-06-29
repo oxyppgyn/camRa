@@ -18,7 +18,7 @@ metadata files hosted on the LILA website or via \code{\link[=LILA_list_files]{L
 
 \item{dir}{character. Directory where images will be saved.}
 
-\item{quiet}{boolean. If information on file downloads should be printed to the console.}
+\item{quiet}{logical. If information on file downloads should be printed to the console.}
 }
 \value{
 \code{NULL}
@@ -31,7 +31,7 @@ Downloads subsets of image files from AWS S3 buckets associated with LILA datase
 #Download example subset files
 LILA_download_files(
   dataset = "ena24detection",
-  files = ena24detection_img_files$subset,
+  files = ena24detection_subset$file,
   dir = getwd()
 )
 \dontshow{\}) # examplesIf}

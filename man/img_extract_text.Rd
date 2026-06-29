@@ -4,7 +4,7 @@
 \alias{img_extract_text}
 \title{Extract Text from Image Using OCR}
 \usage{
-img_extract_text(image, bbox = NULL, file = NULL, ...)
+img_extract_text(image, bbox = NULL, file = NULL, overwrite = FALSE, ...)
 }
 \arguments{
 \item{image}{character or magick-image. The image to extract text from.}

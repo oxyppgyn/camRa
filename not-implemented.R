@@ -19,22 +19,39 @@
 #' @param file character. File to write image to. Use `NA` to skip writing to a file.
 #' @param validate_json boolean. If JSON data formatted as nested lists should be validated.
 #' This can prevent unexpected errors if the parameter is a list, but not JSON but may increase runtime.
+#' @param ... additional arguments passed to [rect()].
 #'
 #' @return a magick image.
 # -----------------------------------------' @export
-image_draw_bbox <- function(image, bbox, json, file = NA, validate_json = .validate_json) {
+img_draw_bbox <- function(image, bbox, file = NULL, overwrite = FALSE, validate_json = getOption('camRa.validate_json', default = TRUE), ...) {
+  #Check BBox Input
+  if (class(bbox) != 'character' || length(bbox) != 4) {
+    stop('Parameter `bbox` must be a a vector with four values (xmin, ymin, xmax, ymax).')
+  }
+
   #Get Image
   img <- import_image(image)
 
-  if (missing(bbox) & missing(json)) {
-    stop('One of `bbox` or `json` must be given.')
+  #Draw BBox
+  on.exit(dev.off())
+  img <- magick::image_draw(img)
+  rect(
+    xleft = bbox[[1]],
+    ybottom = bbox[[2]],
+    xright = bbox[[3]],
+    ytop = bbox[[4]],
+    ...
+  )
+
+  #Save File
+  if (!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
+    magick::image_write(img, path = file)
   }
 
-  if (!missing(bbox)) {
-
-  } else {
-
-  }
+  return(img)
 }
 
 # ------------------

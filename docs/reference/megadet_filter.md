@@ -10,6 +10,7 @@ megadet_filter(
   dir,
   json,
   file = NULL,
+  overwrite = FALSE,
   validate_json = getOption("camRa.validate_json", default = TRUE)
 )
 ```
@@ -38,6 +39,10 @@ megadet_filter(
   boolean. If JSON data formatted as nested lists should be validated.
   This can prevent unexpected errors if the parameter is a list, but not
   JSON but may increase runtime.
+
+- overwrite.:
+
+  logical. If overwriting files is allowed.
 
 ## Value
 

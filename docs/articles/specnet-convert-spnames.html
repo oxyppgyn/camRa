@@ -89,7 +89,8 @@ SpeciesNet is classifying things higher taxonomically than you want,
 such as tagging detections as <em>peromyscus</em> when you can’t tell
 anything more than the animal is some kind of rodent.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.r-universe.dev/jsonlite" class="external-link">jsonlite</a></span>, <span class="va">camRa</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://oxyppgyn.github.io/camRa">camRa</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.r-universe.dev/jsonlite" class="external-link">jsonlite</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#Turn off validation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span><span class="st">"camRa.validate_json"</span> <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
@@ -272,7 +273,8 @@ strings.</p>
 <span>  values_from <span class="op">=</span> <span class="va">species_map</span><span class="op">$</span><span class="va">old_species</span>,</span>
 <span>  values_to <span class="op">=</span> <span class="va">species_map</span><span class="op">$</span><span class="va">new_species</span>,</span>
 <span>  values_description <span class="op">=</span> <span class="va">species_map</span><span class="op">$</span><span class="va">new_description</span>,</span>
-<span>  file <span class="op">=</span> <span class="st">"reclass_ena24subset_MegaDet_recognition.json"</span></span>
+<span>  file <span class="op">=</span> <span class="st">"reclass_ena24subset_MegaDet_recognition.json"</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Now you have an updated file, but how can you tell if it’s correct?
 With the way SpeciesNet data is written, the JSON file just has numbers

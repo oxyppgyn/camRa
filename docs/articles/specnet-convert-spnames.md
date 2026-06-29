@@ -23,7 +23,8 @@ things higher taxonomically than you want, such as tagging detections as
 kind of rodent.
 
 ``` r
-library(jsonlite, camRa)
+library(camRa)
+library(jsonlite)
 
 #Turn off validation
 options("camRa.validate_json" = FALSE)
@@ -187,7 +188,8 @@ new_json_data <- camRa::specnet_reclassify(
   values_from = species_map$old_species,
   values_to = species_map$new_species,
   values_description = species_map$new_description,
-  file = "reclass_ena24subset_MegaDet_recognition.json"
+  file = "reclass_ena24subset_MegaDet_recognition.json",
+  overwrite = TRUE
 )
 ```
 

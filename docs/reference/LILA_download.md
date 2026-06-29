@@ -34,7 +34,7 @@ LILA_download(dataset, files, dir, quiet = FALSE)
 
 - quiet:
 
-  boolean. If information on file downloads should be printed to the
+  logical. If information on file downloads should be printed to the
   console.
 
 ## Value
@@ -47,8 +47,8 @@ LILA_download(dataset, files, dir, quiet = FALSE)
 #Download example subset files
 LILA_download_files(
   dataset = "ena24detection",
-  files = ena24detection_img_files$subset,
+  files = ena24detection_subset$file,
   dir = getwd()
 )
-#> Error in LILA_download_files(dataset = "ena24detection", files = ena24detection_img_files$subset,     dir = getwd()): could not find function "LILA_download_files"
+#> Error in LILA_download_files(dataset = "ena24detection", files = ena24detection_subset$file,     dir = getwd()): could not find function "LILA_download_files"
 ```

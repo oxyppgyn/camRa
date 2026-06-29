@@ -49,7 +49,7 @@ crop_image <- function(image, bbox) {
 #'
 #' @return a character.
 #' @export
-img_extract_text <- function(image, bbox = NULL, file = NULL, ...) {
+img_extract_text <- function(image, bbox = NULL, file = NULL, overwrite = FALSE, ...) {
   #Get Image
   img <- import_image(image)
 
@@ -64,6 +64,9 @@ img_extract_text <- function(image, bbox = NULL, file = NULL, ...) {
 
   #Save Image
   if(!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
     magick::image_write(img, path = file)
   }
 
@@ -262,7 +265,7 @@ convert_bbox <- function(bbox, from, to, image = NULL, img_width = NULL, img_hei
 #'
 #' @return a magick image.
 #' @export
-img_diff <- function(image1, image2, file = NULL, bbox = NULL, threshold = NULL) {
+img_difference <- function(image1, image2, threshold = NULL, file = NULL, overwrite = FALSE, bbox = NULL) {
 
   #Read in Images
   img1 <- import_image(image1)
@@ -292,6 +295,9 @@ img_diff <- function(image1, image2, file = NULL, bbox = NULL, threshold = NULL)
 
   #Save Image
   if (!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
     magick::image_write(diff_img, path = file)
   }
 
@@ -301,17 +307,18 @@ img_diff <- function(image1, image2, file = NULL, bbox = NULL, threshold = NULL)
 #' Apply a Summary function to an Image
 #'
 #' Applies a function to the extracted numeric matrix of values behind an image
-#' and returns the result. Functions are applied using `apply()` across channels.
-#' #'
+#' and returns the result. Functions are applied using `apply()` across all channels.
+#'
 #' @param image character or magick-image. Image to extract information from.
+#' @param fun function reference. The function to be applied.
 #' @param bbox numeric vector. Bounding box values. Formatted as xmin, ymin, xmax, ymax.
 #' Use [camRa::convert_bbox()] to convert from other formats.
 #'@param ... Additional arguments passed to `fun`.
 #'
 #' @return varies based on function applied.
 #' @export
-img_apply <- function(image, fun, bbox = NULL, ...) {
-  if (!class(fun) == 'function') {
+img_apply <- function(image, fun, file = NULL, overwrite = FALSE, bbox = NULL,...) {
+  if (class(fun) != 'function') {
     stop('`fun` is not a function.')
   }
 
@@ -324,14 +331,21 @@ img_apply <- function(image, fun, bbox = NULL, ...) {
   #Get Image as Data
   img <- magick::image_data(img) |> as.numeric()
 
+  #Save Image
+  if (!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
+    magick::image_write(img, path = file)
+  }
+
   return(fun(img, ...))
 }
 
 #' Calculate Luminosity/Brightness of an Image
 #'
-#' Extracts luminance information from a specified colorspace and returns the
+#' Extracts luminance information from a specified colorspace and returns
 #' the appropriate channel.
-#'
 #'
 #' @param image character or magick-image. Image to extract information from.
 #' @param method character. The method used to calculate luminosity/brightness.
@@ -345,7 +359,7 @@ img_apply <- function(image, fun, bbox = NULL, ...) {
 #'
 #' @return a magick image.
 #' @export
-img_luminosity <- function(image, method = 'grayscale', file = NULL, bbox = NULL) {
+img_luminosity <- function(image, method = 'grayscale', file = NULL, overwrite = FALSE, bbox = NULL) {
   #Check Input
   if (!method %in% c('greyscale', 'grayscale', 'LAB', 'HSV', 'YCbCr', 'YIQ')) {
     stop('`method` is not a valid luminosity/brightness option.')
@@ -371,6 +385,9 @@ img_luminosity <- function(image, method = 'grayscale', file = NULL, bbox = NULL
 
   #Save Image
   if (!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
     magick::image_write(img, path = file)
   }
 

@@ -1,4 +1,4 @@
-# Insert New Values for a Timelapse DDB Column
+# Insert New Values for a Timelapse Database Column
 
 Inserts a vector of values into a column in the data table of a
 Timelapse DDB file, overwriting existing data. Best used to insert data
@@ -19,7 +19,7 @@ tl_ddb_insert(file, col, values, ids)
 
 - col:
 
-  character. Name of the column you want to update in the DDB file.
+  character. Name of the column you want to update in the database file.
 
 - values:
 
@@ -29,9 +29,9 @@ tl_ddb_insert(file, col, values, ids)
 - ids:
 
   numeric vector. A vector of values with the IDs used in the table.
-  [tl_ddb_extract](https://oxyppgyn.github.io/camRa/reference/tl_ddb_extract.md)
+  [`tl_ddb_extract()`](https://oxyppgyn.github.io/camRa/reference/tl_ddb_extract.md)
   can be used to extract this information and join with your datasets.
 
 ## Value
 
-NULL.
+`NULL`

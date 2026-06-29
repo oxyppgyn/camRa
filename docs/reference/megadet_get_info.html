@@ -45,7 +45,6 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">megadet_get_info</span><span class="op">(</span></span>
 <span>  <span class="va">json</span>,</span>
 <span>  key <span class="op">=</span> <span class="st">"info"</span>,</span>
-<span>  file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  validate_json <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"camRa.validate_json"</span>, default <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -61,15 +60,8 @@ The JSON file or loaded JSON data to filter on.</p></dd>
 
 <dt id="arg-key">key<a class="anchor" aria-label="anchor" href="#arg-key"></a></dt>
 <dd><p>character, character vector, list, or <code>NULL</code>. Key(s) and/or indices to filter on in the JSON data.
-For first level keys, provide a character of the key name. For higher levels, provide a vector
-of keys in the order they are nested, such as <code>c("info", "megadetector_version")</code> to get the
-MegaDetector version. A list with keys and indices can also be used, such as <code>list("images", 1)</code>
-for detection information on the first image in the file. If <code>NULL</code> is passed as a key, the entire JSON
-file will be returned.</p></dd>
-
-
-<dt id="arg-file">file<a class="anchor" aria-label="anchor" href="#arg-file"></a></dt>
-<dd><p>character. File to write JSON data to. Use <code>NA</code> to skip writing to a file.</p></dd>
+For root keys, provide a character of the key name. For higher levels, provide a vector or list
+of keys in the order they are nested. If <code>NULL</code> is passed as a key, the entire JSON will be returned.</p></dd>
 
 
 <dt id="arg-validate-json">validate_json<a class="anchor" aria-label="anchor" href="#arg-validate-json"></a></dt>

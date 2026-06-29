@@ -19,7 +19,8 @@ This vignette illustrates how a user can update the categories provided in a Spe
 For example, converting all detections tagged as the cervidae family and *Odocoileus* genus to white-tailed deer (*Odocoileus virginianus*). If you run the general SpeciesNet model and not a country/state specific one (like I have), you will probably want to reassign things that are taxonomically different to a species found in your area, like muntjac deer and other Eurasian cervids to white-tailed dear for North American images.The inverse could also be done if SpeciesNet is classifying things higher taxonomically than you want, such as tagging detections as *peromyscus* when you can't tell anything more than the animal is some kind of rodent.
 
 ```{r setup}
-library(jsonlite, camRa)
+library(camRa)
+library(jsonlite)
 
 #Turn off validation
 options("camRa.validate_json" = FALSE)
@@ -123,7 +124,8 @@ new_json_data <- camRa::specnet_reclassify(
   values_from = species_map$old_species,
   values_to = species_map$new_species,
   values_description = species_map$new_description,
-  file = "reclass_ena24subset_MegaDet_recognition.json"
+  file = "reclass_ena24subset_MegaDet_recognition.json",
+  overwrite = TRUE
 )
 ```
 

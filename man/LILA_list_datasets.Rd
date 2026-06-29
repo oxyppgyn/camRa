@@ -7,9 +7,9 @@
 LILA_list_datasets(quiet = FALSE, only_nonzip = TRUE)
 }
 \arguments{
-\item{quiet}{boolean. If warnings should be shown.}
+\item{quiet}{logical. If warnings should be shown.}
 
-\item{only_nonzip}{boolean. If the returned datasets should be only ones
+\item{only_nonzip}{logical. If the returned datasets should be only ones
 available file-by-file (not exclusively as compressed files).}
 }
 \value{

@@ -27,8 +27,8 @@ aws_bucket_components <- function(x) {
 #' Provides a dataframe with names (long and short) used for LILA datasets.
 #' Can be used to find valid values for other LILA functions.
 #'
-#' @param quiet boolean. If warnings should be shown.
-#' @param only_nonzip boolean. If the returned datasets should be only ones
+#' @param quiet logical. If warnings should be shown.
+#' @param only_nonzip logical. If the returned datasets should be only ones
 #' available file-by-file (not exclusively as compressed files).
 #' @return A data frame with two columns: `DatasetName` and `DatasetShortName`.
 #' @export
@@ -100,7 +100,7 @@ LILA_list_files <- function(dataset) {
 #' only need the file name with its extension. File names are typically available from JSON
 #' metadata files hosted on the LILA website or via [LILA_list_files()].
 #' @param dir character. Directory where images will be saved.
-#' @param quiet boolean. If information on file downloads should be printed to the console.
+#' @param quiet logical. If information on file downloads should be printed to the console.
 #'
 #' @return `NULL`
 #'
@@ -108,7 +108,7 @@ LILA_list_files <- function(dataset) {
 #' #Download example subset files
 #' LILA_download_files(
 #'   dataset = "ena24detection",
-#'   files = ena24detection_img_files$subset,
+#'   files = ena24detection_subset$file,
 #'   dir = getwd()
 #' )
 #'

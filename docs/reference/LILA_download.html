@@ -67,7 +67,7 @@ metadata files hosted on the LILA website or via <code><a href="LILA_list_files.
 
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
-<dd><p>boolean. If information on file downloads should be printed to the console.</p></dd>
+<dd><p>logical. If information on file downloads should be printed to the console.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -80,10 +80,10 @@ metadata files hosted on the LILA website or via <code><a href="LILA_list_files.
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co">#Download example subset files</span></span></span>
 <span class="r-in"><span><span class="fu">LILA_download_files</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  dataset <span class="op">=</span> <span class="st">"ena24detection"</span>,</span></span>
-<span class="r-in"><span>  files <span class="op">=</span> <span class="va">ena24detection_img_files</span><span class="op">$</span><span class="va">subset</span>,</span></span>
+<span class="r-in"><span>  files <span class="op">=</span> <span class="va">ena24detection_subset</span><span class="op">$</span><span class="va">file</span>,</span></span>
 <span class="r-in"><span>  dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in LILA_download_files(dataset = "ena24detection", files = ena24detection_img_files$subset,     dir = getwd()):</span> could not find function "LILA_download_files"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in LILA_download_files(dataset = "ena24detection", files = ena24detection_subset$file,     dir = getwd()):</span> could not find function "LILA_download_files"</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

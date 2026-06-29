@@ -8,7 +8,7 @@ test images before trusting OCR text outputs.
 ## Usage
 
 ``` r
-img_extract_text(image, bbox = NULL, file = NULL, ...)
+img_extract_text(image, bbox = NULL, file = NULL, overwrite = FALSE, ...)
 ```
 
 ## Arguments
