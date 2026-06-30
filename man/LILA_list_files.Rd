@@ -4,11 +4,14 @@
 \alias{LILA_list_files}
 \title{List Files in LILA Datasets}
 \usage{
-LILA_list_files(dataset)
+LILA_list_files(dataset, num_files = Inf)
 }
 \arguments{
 \item{dataset}{character. Name of the dataset to download images from.
 Can be either the short name or standard name. See \code{\link[=LILA_list_datasets]{LILA_list_datasets()}} for options.}
+
+\item{num_files.}{numeric or \code{Inf}. Maximum number of files to return. Use \code{Inf} to return
+all files.}
 }
 \value{
 A character vector of file names with partial paths (if applicable) of files

@@ -14,7 +14,8 @@ convert_bbox(
   image = NULL,
   img_width = NULL,
   img_height = NULL,
-  value_type = "absolute"
+  value_type = "absolute",
+  from_value_type = NULL
 )
 ```
 
@@ -52,6 +53,12 @@ convert_bbox(
   character. Type of values to use for the converted bounding box
   measures. Either "absolute" for pixel values or "relative" for scaled
   values.
+
+- from_value_type.:
+
+  character or `NULL`. The type of values to convert from. This argument
+  is only used if the type of values in the input bounding box cannot be
+  automatically determined.
 
 ## Value
 

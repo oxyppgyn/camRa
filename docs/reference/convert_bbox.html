@@ -23,6 +23,7 @@ and has not yet been validated."><meta property="og:image" content="https://oxyp
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/analyze-specnet-efficacy.html">Analyze the Efficacy of SpeciesNet/MegaDetector on Your Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/basic-image-manipulation.html">Basic Image Manipulations</a></li>
     <li><a class="dropdown-item" href="../articles/specnet-convert-spnames.html">Convert (Reclassify) SpeciesNet Taxonomic Category</a></li>
     <li><a class="dropdown-item" href="../articles/style-guidelines.html">Style Guidelines/Conventions for this Package</a></li>
   </ul></li>
@@ -55,7 +56,8 @@ and has not yet been validated.</p>
 <span>  image <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  img_width <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  img_height <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  value_type <span class="op">=</span> <span class="st">"absolute"</span></span>
+<span>  value_type <span class="op">=</span> <span class="st">"absolute"</span>,</span>
+<span>  from_value_type <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -91,6 +93,11 @@ mutually exclusive with <code>image</code>.</p></dd>
 <dt id="arg-value-type">value_type<a class="anchor" aria-label="anchor" href="#arg-value-type"></a></dt>
 <dd><p>character. Type of values to use for the converted bounding box measures.
 Either "absolute" for pixel values or "relative" for scaled values.</p></dd>
+
+
+<dt id="arg-from-value-type-">from_value_type.<a class="anchor" aria-label="anchor" href="#arg-from-value-type-"></a></dt>
+<dd><p>character or <code>NULL</code>. The type of values to convert from. This argument is only
+used if the type of values in the input bounding box cannot be automatically determined.</p></dd>
 
 </dl></div>
     <div class="section level2">

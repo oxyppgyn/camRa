@@ -6,7 +6,7 @@ LILA datasets.
 ## Usage
 
 ``` r
-LILA_download(dataset, files, dir, quiet = FALSE)
+LILA_download(dataset, files, dir, flatten = FALSE, quiet = FALSE)
 ```
 
 ## Arguments
@@ -31,6 +31,12 @@ LILA_download(dataset, files, dir, quiet = FALSE)
 - dir:
 
   character. Directory where images will be saved.
+
+- flatten:
+
+  logical. If the folder structure should be flattened. If `TRUE`, all
+  image files are downloaded directly into `dir` and no new subfolders
+  are created.
 
 - quiet:
 

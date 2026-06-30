@@ -36,6 +36,8 @@ usethis::use_data(DATASET_OBJ_HERE, internal = TRUE, overwrite = TRUE)
 
 # ---------- Update Documentation ----------
 #Run this entire section when making the package
+devtools::install()
+
 #Documentation Files
 devtools::document()
 

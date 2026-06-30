@@ -1,6 +1,6 @@
 Type: Package
 Package: camRa
-Title: Provides Utilities for Managing Camera Trap Data
+Title: Utility Functions for Managing and Manipulating Camera Trap Data
 Version: 0.0.1.9000
 Authors@R: person("Tanner", "Hammond", , "tannerhammond73@gmail.com", role = c("aut", "cre"))
 Description: Provides utility functions aimed at making it easier to pull in and edit data related to camera traps. This includes manipulating detection files from MegaDetector and SpeciesNet, extracting data from/editing imagesas, and downloading LILA datasets without needing to learn how to use AWS among other things. 
@@ -10,7 +10,7 @@ BugReports: https://https://github.com/oxyppgyn/camRa/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
-Imports: jsonlite,aws.s3, DBI, RSQLite, magick, tesseract
+Imports: jsonlite, aws.s3, DBI, RSQLite, magick, tesseract, checkmate
 Depends: R (>= 3.5)
 LazyData: true
 Suggests: knitr, rmarkdown, dplyr, stringr, ggplot2

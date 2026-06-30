@@ -16,6 +16,9 @@ NULL
 #' @return a data frame.
 #' @export
 tl_ddb_extract <- function(file) {
+  #Check Inputs
+  checkmate::assert_character(file)
+
   #Connect to DB
   con <- DBI::dbConnect(RSQLite::SQLite(), file)
   on.exit(DBI::dbDisconnect(con))
@@ -43,10 +46,10 @@ tl_ddb_extract <- function(file) {
 #' @return `NULL`
 #' @export
 tl_ddb_insert <- function(file, col, values, ids) {
-  #Check if Values and IDs are Same Length
-  if (length(values) != length(ids)) {
-    stop('Values and ids are different lengths.')
-  }
+  #Check Inputs
+  checkmate::assert_character(file)
+  checkmate::assert_character(col)
+  if (length(values) != length(ids)) {stop('Values and ids are different lengths.')}
 
   #Connect to DB
   con <- DBI::dbConnect(RSQLite::SQLite(), file)

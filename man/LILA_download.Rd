@@ -4,7 +4,7 @@
 \alias{LILA_download}
 \title{Download LILA Image Files}
 \usage{
-LILA_download(dataset, files, dir, quiet = FALSE)
+LILA_download(dataset, files, dir, flatten = FALSE, quiet = FALSE)
 }
 \arguments{
 \item{dataset}{character. Name of the dataset to download images from.
@@ -17,6 +17,9 @@ only need the file name with its extension. File names are typically available f
 metadata files hosted on the LILA website or via \code{\link[=LILA_list_files]{LILA_list_files()}}.}
 
 \item{dir}{character. Directory where images will be saved.}
+
+\item{flatten}{logical. If the folder structure should be flattened. If \code{TRUE}, all image files
+are downloaded directly into \code{dir} and no new subfolders are created.}
 
 \item{quiet}{logical. If information on file downloads should be printed to the console.}
 }

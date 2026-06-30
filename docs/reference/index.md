@@ -25,6 +25,8 @@ Functions for manipulating and extracting information from images.
   : Apply a Summary function to an Image
 - [`img_difference()`](https://oxyppgyn.github.io/camRa/reference/img_difference.md)
   : Calculate Differences Between Two Images
+- [`img_draw_bbox()`](https://oxyppgyn.github.io/camRa/reference/img_draw_bbox.md)
+  : Add Bounding Box(es) to Images
 - [`img_extract_text()`](https://oxyppgyn.github.io/camRa/reference/img_extract_text.md)
   : Extract Text from Image Using OCR
 - [`img_luminosity()`](https://oxyppgyn.github.io/camRa/reference/img_luminosity.md)
@@ -58,3 +60,5 @@ Datasets included in this package.
 
 - [`ena24detection_subset`](https://oxyppgyn.github.io/camRa/reference/ena24detection_subset.md)
   : Random Subset of ena24detection files
+- [`nacti_subset`](https://oxyppgyn.github.io/camRa/reference/nacti_subset.md)
+  : Subset of North American Camera Trap Images files

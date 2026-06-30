@@ -19,6 +19,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/analyze-specnet-efficacy.html">Analyze the Efficacy of SpeciesNet/MegaDetector on Your Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/basic-image-manipulation.html">Basic Image Manipulations</a></li>
     <li><a class="dropdown-item" href="../articles/specnet-convert-spnames.html">Convert (Reclassify) SpeciesNet Taxonomic Category</a></li>
     <li><a class="dropdown-item" href="../articles/style-guidelines.html">Style Guidelines/Conventions for this Package</a></li>
   </ul></li>
@@ -42,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">LILA_list_files</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">LILA_list_files</span><span class="op">(</span><span class="va">dataset</span>, num_files <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -52,6 +53,11 @@
 <dl><dt id="arg-dataset">dataset<a class="anchor" aria-label="anchor" href="#arg-dataset"></a></dt>
 <dd><p>character. Name of the dataset to download images from.
 Can be either the short name or standard name. See <code><a href="LILA_list_datasets.html">LILA_list_datasets()</a></code> for options.</p></dd>
+
+
+<dt id="arg-num-files-">num_files.<a class="anchor" aria-label="anchor" href="#arg-num-files-"></a></dt>
+<dd><p>numeric or <code>Inf</code>. Maximum number of files to return. Use <code>Inf</code> to return
+all files.</p></dd>
 
 </dl></div>
     <div class="section level2">

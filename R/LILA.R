@@ -33,6 +33,11 @@ aws_bucket_components <- function(x) {
 #' @return A data frame with two columns: `DatasetName` and `DatasetShortName`.
 #' @export
 LILA_list_datasets <- function(quiet = FALSE, only_nonzip = TRUE) {
+  #Validate Inputs
+  checkmate::assert_logical(quiet)
+  checkmate::assert_logical(only_nonzip)
+
+  #Print Warning
   if (!quiet) {
     warning('Datasets listed here are those available from LILA as of 06/18/2026.')
   }
@@ -55,15 +60,17 @@ LILA_list_datasets <- function(quiet = FALSE, only_nonzip = TRUE) {
 #'
 #' @param dataset character. Name of the dataset to download images from.
 #' Can be either the short name or standard name. See [LILA_list_datasets()] for options.
+#' @param num_files. numeric or `Inf`. Maximum number of files to return. Use `Inf` to return
+#' all files.
 #'
 #' @return A character vector of file names with partial paths (if applicable) of files
 #' present in LILA datasets.
 #' @export
-LILA_list_files <- function(dataset) {
+LILA_list_files <- function(dataset, num_files = Inf) {
   #Validate Inputs
-  if (!(dataset %in% LILA_datasets$DatasetName | dataset %in% LILA_datasets$DatasetShortName)) {
-    stop('Paramter `dataset` is not a valid option. See LILA_list_datasets() for a list of valid dataset names.')
-  }
+  checkmate::assert_character(dataset)
+  checkmate::assert_numeric(num_files)
+  if (!(dataset %in% LILA_datasets$DatasetName | dataset %in% LILA_datasets$DatasetShortName)) {stop('`dataset` is not a valid option. See LILA_list_datasets() for a list of valid dataset names.')}
 
   #Get Dataset Info
   ds_info <- LILA_datasets[LILA_datasets$DatasetName == dataset | LILA_datasets$DatasetShortName == dataset,] |>
@@ -74,9 +81,10 @@ LILA_list_files <- function(dataset) {
   bucket <- aws_bucket_components(ds_info$AWS)
 
   #Get List of Files
-  aws_files <- get_bucket_df(
+  aws_files <- aws.s3::get_bucket_df(
     bucket = bucket[[1]], prefix = bucket[[2]],
-    region = aws_region
+    region = aws_region,
+    max = num_files
   )
 
   aws_files <- aws_files$Key
@@ -100,6 +108,8 @@ LILA_list_files <- function(dataset) {
 #' only need the file name with its extension. File names are typically available from JSON
 #' metadata files hosted on the LILA website or via [LILA_list_files()].
 #' @param dir character. Directory where images will be saved.
+#' @param flatten logical. If the folder structure should be flattened. If `TRUE`, all image files
+#' are downloaded directly into `dir` and no new subfolders are created.
 #' @param quiet logical. If information on file downloads should be printed to the console.
 #'
 #' @return `NULL`
@@ -113,11 +123,14 @@ LILA_list_files <- function(dataset) {
 #' )
 #'
 #' @export
-LILA_download <- function(dataset, files, dir, quiet = FALSE) {
+LILA_download <- function(dataset, files, dir, flatten = FALSE, quiet = FALSE) {
   #Validate Inputs
-  if (!(dataset %in% LILA_datasets$DatasetName | dataset %in% LILA_datasets$DatasetShortName)) {
-    stop('Paramter `dataset` is not a valid option. See LILA_datasets() for a list of valid dataset names.')
-  }
+  checkmate::assert_character(dataset)
+  checkmate::assert_character(files)
+  checkmate::assert_logical(flatten)
+  checkmate::assert_logical(quiet)
+  if (!(dataset %in% LILA_datasets$DatasetName | dataset %in% LILA_datasets$DatasetShortName)) {stop('`dataset` is not a valid option. See LILA_datasets() for a list of valid dataset names.')}
+  if (flatten & length(unique(basename(files))) != length(files)) {stop('Directories cannot be flattened, some files have the same file name.')}
 
   #Get Dataset Info
   ds_info <- LILA_datasets[LILA_datasets$DatasetName == dataset | LILA_datasets$DatasetShortName == dataset,] |>
@@ -128,9 +141,13 @@ LILA_download <- function(dataset, files, dir, quiet = FALSE) {
   bucket <- aws_bucket_components(ds_info$AWS)
 
   #Create Folders
-  file_paths <- file.path(dir, files)
-  folder_paths <- file_paths |> dirname() |> unique()
-  lapply(X = folder_paths, FUN = dir.create, showWarnings = FALSE)
+  if (flatten) {
+    file_paths <- file.path(dir, basename(files))
+  } else {
+    file_paths <- file.path(dir, files)
+    folder_paths <- file_paths |> dirname() |> unique()
+    lapply(X = folder_paths, FUN = dir.create, showWarnings = FALSE)
+  }
 
   #Download File
   for (i in 1:length(files)) {

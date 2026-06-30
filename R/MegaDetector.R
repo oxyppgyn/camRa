@@ -22,6 +22,12 @@ NULL
 #' @return a nested list object with filtered JSON data.
 #' @export
 megadet_filter <- function(dir, json, file = NULL, overwrite = FALSE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
+  #Check Inputs
+  checkmate::assert_character(dir)
+  checkmate::assert_character(file, null.ok = TRUE)
+  checkmate::assert_logical(overwrite)
+  checkmate::assert_logical(validate_json)
+
   #Get Files to Filter For
   img_files <- list.files(dir, full.names = FALSE, recursive = TRUE)
 
@@ -68,7 +74,8 @@ megadet_filter <- function(dir, json, file = NULL, overwrite = FALSE, validate_j
 megadet_flatten <- function(json, map_names = TRUE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
 
   #Check Inputs
-  if (!is.logical(map_names)) {stop('`map_names` must be numeric.')}
+  checkmate::assert_logical(map_names)
+  checkmate::assert_logical(validate_json)
 
   #Import JSON File/Validate JSON Object
   json_data <- json_valimport(json, validate_json)
@@ -219,6 +226,9 @@ megadet_flatten <- function(json, map_names = TRUE, validate_json = getOption('c
 #' @return dependent on keys used.
 #' @export
 megadet_get_info <- function(json, key = 'info', validate_json = getOption('camRa.validate_json', default = TRUE)) {
+  #Check Inputs
+  checkmate::assert_logical(validate_json)
+
   #Import JSON File/Validate JSON Object
   json_data <- json_valimport(json, validate_json)
 
@@ -247,9 +257,10 @@ megadet_get_info <- function(json, key = 'info', validate_json = getOption('camR
 #' @export
 megadet_get_counts <- function(json, type = 'detection', map_names = TRUE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
   #Validate Inputs
-  if (!type %in% c('detection', 'classification')) {
-    stop('Paramter `type` is not a valid option.')
-  }
+  checkmate::assert_character(type)
+  if (!type %in% c('detection', 'classification')) {stop('`type` must be either "detection" or "classification".')}
+  checkmate::assert_logical(map_names)
+  checkmate::assert_logical(validate_json)
 
   #Import JSON File/Validate JSON Object
   json_data <- json_valimport(json, validate_json)
@@ -335,14 +346,15 @@ megadet_get_counts <- function(json, type = 'detection', map_names = TRUE, valid
 #' @return a nested list object representing JSON data.
 #' @export
 specnet_reclassify <- function(json, values_from, values_to, values_description = NULL, file = NULL, overwrite = FALSE, validate_json = getOption('camRa.validate_json', default = TRUE)) {
-  #Check if From Values Are Unique + Same Length
-  if (length(values_from) != length(unique(values_from))) {
-    stop('Values from are not unique.')
-  }
-
-  if (length(values_from) != length(values_to)) {
-    stop('Values from and to are not the same length.')
-  }
+  #Validate Inputs
+  checkmate::assert_character(values_from)
+  checkmate::assert_character(values_to)
+  checkmate::assert_character(values_description, null.ok = TRUE)
+  checkmate::assert_character(file, null.ok = TRUE)
+  checkmate::assert_logical(overwrite)
+  checkmate::assert_logical(validate_json)
+  if (length(values_from) != length(unique(values_from))) {stop('Values in `from` are not unique.')}
+  if (length(values_from) != length(values_to)) {stop('Values in `from` and `to` are not the same length.')}
 
   #Import JSON File/Validate JSON Object
   json_data <- json_valimport(json, validate_json)
@@ -356,15 +368,8 @@ specnet_reclassify <- function(json, values_from, values_to, values_description 
     stop('Values from is missing values present in classification_categories.')
   }
 
-  if (class(values_description) == 'character') {
-    if (length(values_description) != length(values_from)) {
-      stop('Values from is not the same length as value descriptions.')
-    }
-
-  } else {
-    if (!is.null(values_description)) {
-      stop('Value descriptions must be a character vector or `NULL`.')
-    }
+  if (is.character(values_description) && length(values_description) != length(values_from)) {
+    stop('Values from is not the same length as value descriptions.')
   }
 
   #Get Maps
@@ -403,7 +408,7 @@ specnet_reclassify <- function(json, values_from, values_to, values_description 
   json_data$classification_categories <- new_map
 
   #Replace Classification Descriptions
-  if (class(values_description) == 'character') {
+  if (is.character(values_description)) {
     desc_map <- unique(values_description) |> as.list()
     names(desc_map) <- 0:(length(unique(values_description)) - 1)  |> as.character()
 

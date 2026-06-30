@@ -7,7 +7,7 @@ NULL
 # ---------- Private Functions ----------
 #Import magick Image
 import_image <- function(image) {
-  if (class(image) == 'character') {
+  if (is.character(image)) {
     return(magick::image_read(image))
   }
 
@@ -18,16 +18,10 @@ import_image <- function(image) {
 }
 
 crop_image <- function(image, bbox) {
-  if (any(!is.null(bbox))) {
-    if (length(bbox) != 4) {
-      stop('Parameter `bbox` must be a a vector with four values (xmin, ymin, xmax, ymax) or `NULL`.')
-    }
-
-    width  <- bbox[[3]] - bbox[[1]] # xmax - xmin
-    height <- bbox[[4]] - bbox[[2]] # ymax - ymin
-    geometry <- paste0(width, 'x', height, '+', bbox[[1]], '+', bbox[[2]])
-    image <- magick::image_crop(image = image, geometry = geometry)
-  }
+  width  <- bbox[[3]] - bbox[[1]] # xmax - xmin
+  height <- bbox[[4]] - bbox[[2]] # ymax - ymin
+  geometry <- paste0(width, 'x', height, '+', bbox[[1]], '+', bbox[[2]])
+  image <- magick::image_crop(image = image, geometry = geometry)
 
   return(image)
 }
@@ -50,6 +44,11 @@ crop_image <- function(image, bbox) {
 #' @return a character.
 #' @export
 img_extract_text <- function(image, bbox = NULL, file = NULL, overwrite = FALSE, ...) {
+  #Check Inputs
+  checkmate::assert_numeric(bbox, len = 4, null.ok = TRUE)
+  checkmate::assert_character(file, null.ok = TRUE)
+  checkmate::assert_logical(overwrite)
+
   #Get Image
   img <- import_image(image)
 
@@ -97,41 +96,37 @@ img_extract_text <- function(image, bbox = NULL, file = NULL, overwrite = FALSE,
 #' mutually exclusive with `image`.
 #' @param value_type character. Type of values to use for the converted bounding box measures.
 #' Either "absolute" for pixel values or "relative" for scaled values.
+#' @param from_value_type. character or `NULL`. The type of values to convert from. This argument is only
+#' used if the type of values in the input bounding box cannot be automatically determined.
 #'
 #' @return a numberic vector.
 #' @export
-convert_bbox <- function(bbox, from, to, image = NULL, img_width = NULL, img_height = NULL, value_type = 'absolute') {
+convert_bbox <- function(bbox, from, to, image = NULL, img_width = NULL, img_height = NULL, value_type = 'absolute', from_value_type = NULL) {
   #Check Inputs
-  if (length(bbox) != 4) {
-    stop('Parameter `bbox` must be a a vector with four values (xmin, ymin, xmax, ymax) or `NA`.')
-  }
+  checkmate::assert_numeric(bbox, len = 4, null.ok = TRUE)
+  checkmate::assert_character(from)
+  checkmate::assert_character(to)
+  checkmate::assert_integer(img_width, null.ok = TRUE)
+  checkmate::assert_integer(img_height, null.ok = TRUE)
+  checkmate::assert_character(value_type)
+  checkmate::assert_character(from_value_type, null.ok = TRUE)
 
-  if (!from %in% c('xyxy', 'xywh', 'centerwh')) {
-    stop('Parameter `from` must be one of "xyxy", "xywh", or "centerwh".')
-  }
-
-  if (!to %in% c('xyxy', 'xywh', 'centerwh')) {
-    stop('Parameter `to` must be one of "xyxy", "xywh", or "centerwh".')
-  }
-
-  if (!value_type %in% c('absolute', 'relative')) {
-    stop('Parameter `value_type` must be one of "absolute" or "relative".')
-  }
-
-  if (from == to) {
-    stop('Parameters `from` and `to` must be different values.')
-  }
+  if (!from %in% c('xyxy', 'xywh', 'centerwh')) {stop('`from` must be one of "xyxy", "xywh", or "centerwh".')}
+  if (!to %in% c('xyxy', 'xywh', 'centerwh')) {stop('`to` must be one of "xyxy", "xywh", or "centerwh".')}
+  if (!value_type %in% c('absolute', 'relative')) {stop('`value_type` must be one of "absolute" or "relative".')}
 
   #Determine BBox Format
-  ##Relative Values
   if(all(bbox <= 1)) {
+    ##Relative Values
     given_value_type <- 'relative'
     ##Absolute Values
   } else if (all(bbox > 1)) {
     given_value_type <- 'absolute'
     ##Unknown
-  } else {
+  } else if (is.null(from_value_type)) {
     stop('Could not determine bounding box format from values provided.')
+  } else {
+    given_value_type <- from_value_type
   }
 
   #Get Image Width/Height
@@ -147,13 +142,16 @@ convert_bbox <- function(bbox, from, to, image = NULL, img_width = NULL, img_hei
   }
 
   #Convert
-  if (from == 'xyxy' & to == 'xywh') {
+  if (from == to) {
+    bbox_new <- bbox
+  } else if (from == 'xyxy' & to == 'xywh') {
     bbox_new <- c(
       bbox[[1]],
       bbox[[2]],
       bbox[[3]] - bbox[[1]],
       bbox[[4]] - bbox[[2]]
     )
+
   } else if (from == 'xyxy' & to == 'centerwh') {
     bbox_new <- c(
       (bbox[[1]] + bbox[[3]]) / 2,
@@ -266,6 +264,11 @@ convert_bbox <- function(bbox, from, to, image = NULL, img_width = NULL, img_hei
 #' @return a magick image.
 #' @export
 img_difference <- function(image1, image2, threshold = NULL, file = NULL, overwrite = FALSE, bbox = NULL) {
+  #Check Inputs
+  checkmate::assert_numeric(threshold, null.ok = TRUE)
+  checkmate::assert_character(file, null.ok = TRUE)
+  checkmate::assert_logical(overwrite)
+  checkmate::assert_numeric(bbox, len = 4, null.ok = TRUE)
 
   #Read in Images
   img1 <- import_image(image1)
@@ -318,9 +321,11 @@ img_difference <- function(image1, image2, threshold = NULL, file = NULL, overwr
 #' @return varies based on function applied.
 #' @export
 img_apply <- function(image, fun, file = NULL, overwrite = FALSE, bbox = NULL,...) {
-  if (class(fun) != 'function') {
-    stop('`fun` is not a function.')
-  }
+  #Check Inputs
+  checkmate::assert_function(fun)
+  checkmate::assert_character(file, null.ok = TRUE)
+  checkmate::assert_logical(overwrite)
+  checkmate::assert_numeric(bbox, len = 4, null.ok = TRUE)
 
   #Import Image
   img <- import_image(image)
@@ -360,10 +365,13 @@ img_apply <- function(image, fun, file = NULL, overwrite = FALSE, bbox = NULL,..
 #' @return a magick image.
 #' @export
 img_luminosity <- function(image, method = 'grayscale', file = NULL, overwrite = FALSE, bbox = NULL) {
-  #Check Input
-  if (!method %in% c('greyscale', 'grayscale', 'LAB', 'HSV', 'YCbCr', 'YIQ')) {
-    stop('`method` is not a valid luminosity/brightness option.')
-  }
+  #Check Inputs
+  checkmate::assert_character(method)
+  if (!method %in% c('greyscale', 'grayscale', 'LAB', 'HSV', 'YCbCr', 'YIQ')) {stop('`method` is not a valid luminosity/brightness option.')}
+  checkmate::assert_character(file, null.ok = TRUE)
+  checkmate::assert_logical(overwrite)
+  checkmate::assert_numeric(bbox, len = 4, null.ok = TRUE)
+
 
   #Import Image
   img <- import_image(image)
@@ -384,6 +392,56 @@ img_luminosity <- function(image, method = 'grayscale', file = NULL, overwrite =
   }
 
   #Save Image
+  if (!is.null(file)) {
+    if (file.exists(file) & !overwrite) {
+      stop('File already exists and overwriting is not enabled.')
+    }
+    magick::image_write(img, path = file)
+  }
+
+  return(img)
+}
+
+#' Add Bounding Box(es) to Images
+#'
+#' Overlays bounding box(es) over images and saves this as a new image.
+#'
+#' @param image character or magick-image. The image to extract text from.
+#' @param bbox,json Pick one of `bbox` and `json`:
+#'   * `bbox` character vector. Bounding box values. Formatted as xmin, ymin, xmax, ymax
+#' using absolute pixel values (Top-Left Bottom-Right format). Use `NA` to get text from
+#' the entire image.
+#'   * `json`character vector or nested list object from [jsonlite::read_json()].
+#' JSON data with bounding box info to pull for the image.
+#' @param file character. File to write image to. Use `NA` to skip writing to a file.
+#' @param validate_json boolean. If JSON data formatted as nested lists should be validated.
+#' This can prevent unexpected errors if the parameter is a list, but not JSON but may increase runtime.
+#' @param ... additional arguments passed to [rect()].
+#'
+#' @return a magick image.
+#' @export
+img_draw_bbox <- function(image, bbox, file = NULL, overwrite = FALSE, validate_json = getOption('camRa.validate_json', default = TRUE), ...) {
+  #Check Inputs
+  checkmate::assert_numeric(bbox, len = 4)
+  checkmate::assert_character(file, null.ok = TRUE)
+  checkmate::assert_logical(overwrite)
+  checkmate::assert_logical(validate_json)
+
+  #Get Image
+  img <- import_image(image)
+
+  #Draw BBox
+  on.exit(dev.off())
+  img <- magick::image_draw(img)
+  rect(
+    xleft = bbox[[1]],
+    ybottom = bbox[[2]],
+    xright = bbox[[3]],
+    ytop = bbox[[4]],
+    ...
+  )
+
+  #Save File
   if (!is.null(file)) {
     if (file.exists(file) & !overwrite) {
       stop('File already exists and overwriting is not enabled.')

@@ -29,3 +29,4 @@ reference:
     desc: "Datasets included in this package."
     contents:
       - ena24detection_subset
+      - nacti_subset

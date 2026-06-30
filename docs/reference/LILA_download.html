@@ -19,6 +19,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/analyze-specnet-efficacy.html">Analyze the Efficacy of SpeciesNet/MegaDetector on Your Dataset</a></li>
+    <li><a class="dropdown-item" href="../articles/basic-image-manipulation.html">Basic Image Manipulations</a></li>
     <li><a class="dropdown-item" href="../articles/specnet-convert-spnames.html">Convert (Reclassify) SpeciesNet Taxonomic Category</a></li>
     <li><a class="dropdown-item" href="../articles/style-guidelines.html">Style Guidelines/Conventions for this Package</a></li>
   </ul></li>
@@ -42,7 +43,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">LILA_download</span><span class="op">(</span><span class="va">dataset</span>, <span class="va">files</span>, <span class="va">dir</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">LILA_download</span><span class="op">(</span><span class="va">dataset</span>, <span class="va">files</span>, <span class="va">dir</span>, flatten <span class="op">=</span> <span class="cn">FALSE</span>, quiet <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -64,6 +65,11 @@ metadata files hosted on the LILA website or via <code><a href="LILA_list_files.
 
 <dt id="arg-dir">dir<a class="anchor" aria-label="anchor" href="#arg-dir"></a></dt>
 <dd><p>character. Directory where images will be saved.</p></dd>
+
+
+<dt id="arg-flatten">flatten<a class="anchor" aria-label="anchor" href="#arg-flatten"></a></dt>
+<dd><p>logical. If the folder structure should be flattened. If <code>TRUE</code>, all image files
+are downloaded directly into <code>dir</code> and no new subfolders are created.</p></dd>
 
 
 <dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
